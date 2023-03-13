@@ -83,7 +83,29 @@
                                                     />
                                                 </td>
                                                 <td class="px-6 py-4">
-                                                    delete or edit
+                                                    <Link
+                                                        :href="
+                                                            route(
+                                                                'projects.edit',
+                                                                project.id
+                                                            )
+                                                        "
+                                                        class="font-medium text-blue-500 hover:text-blue-700 mr-2"
+                                                        >Edit</Link
+                                                    >
+                                                    <Link
+                                                        :href="
+                                                            route(
+                                                                'projects.destroy',
+                                                                project.id
+                                                            )
+                                                        "
+                                                        method="delete"
+                                                        as="button"
+                                                        type="button"
+                                                        class="font-medium text-red-500 hover:text-red-700 mr-2"
+                                                        >Delete</Link
+                                                    >
                                                 </td>
                                             </tr>
                                         </tbody>

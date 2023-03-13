@@ -71,7 +71,7 @@ const form = useForm({
 });
 
 const submit = () => {
-    Inertia.put("/skills/${props.skill.id}", {
+    Inertia.post(`/skills/${props.skill.id}`, {
         _method: "put",
         name: form.name,
         image: form.image,

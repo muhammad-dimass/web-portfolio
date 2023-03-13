@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Resources\SkillResource;
@@ -52,14 +53,6 @@ class Skillcontroller extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id): Response
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(Skill $skill)
@@ -76,6 +69,7 @@ class Skillcontroller extends Controller
         $request->validate([
             'name' => ['required', 'min:3'] 
         ]);
+
         if($request->hasFile('image')){
             Storage::delete($skill->image);
             $image = $request->file('image')->store('skills');
@@ -92,8 +86,11 @@ class Skillcontroller extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id): RedirectResponse
+    public function destroy(Skill $skill)
     {
-        //
+        Storage::delete($skill->image);
+        $skill->delete();
+
+        return Redirect::back();
     }
 }

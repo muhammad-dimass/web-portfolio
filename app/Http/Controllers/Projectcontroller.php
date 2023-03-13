@@ -6,6 +6,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Resources\ProjectResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Inertia\Inertia;
@@ -70,24 +71,45 @@ class Projectcontroller extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id): Response
+    public function edit(Project $project)
     {
-        //
+        $skills = Skill::all();
+        return Inertia::render('projects/edit', compact('project','skills'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id): RedirectResponse
+    public function update(Request $request, Project $project)
     {
-        //
+        $image = $project->image;
+        $request->validate([
+            'name' => ['required', 'min:3'],
+            'skill_id' => ['required']
+        ]);
+
+        if($request->hasFile('image')){
+            Storage::delete($project->image);
+            $image = $request->file('image')->store('projects');
+        }
+
+        $project->update([
+            'name'=>$request->name,
+            'skill_id'=>$request->skill_id,
+            'project_url'=>$request->project_url,
+            'image'=>$image
+        ]);
+        return Redirect::route('projects.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id): RedirectResponse
+    public function destroy(Project $project)
     {
-        //
+        Storage::delete($project->image);
+        $project->delete();
+
+        return Redirect::back();
     }
 }
